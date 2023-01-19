@@ -29,7 +29,9 @@ const App = () => {
       form.resetFields();
       setEdit();
     } else {
-      v();
+      values.id = key;
+      dispatch(AddData(values));
+      form.resetFields();
     }
   };
   const onFinishFailed = (errorInfo) => {
