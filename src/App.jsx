@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AddData } from "./redux/action/addData";
 import { DeleteData } from "./redux/action/deleteData";
 import { useState } from "react";
+import { EditData } from "./redux/action/editData";
 
 const App = () => {
   const [edit, setEdit] = useState();
@@ -14,32 +15,33 @@ const App = () => {
     data: store.data.data,
   }));
   const onFinish = (values) => {
-    console.log("🚀 ~ file: App.jsx:17 ~ onFinish ~ values", values.id);
+    console.log("🚀 ~ file: App.jsx:18 ~ onFinish ~ values", values);
+
     if (edit?.id) {
-      console.log("🚀 ~ file: App.jsx:19 ~ onFinish ~ values", edit.id);
-      const editedData = data.map((d)=>{
-        if(edit.id === d.id){
-          
+      const editedData = data.map((d) => {
+        if (edit.id === d.id) {
+          return values;
         }
-      })
-    } else {
-      values.id = key;
-      dispatch(AddData(values));
+        console.log("D:", d);
+        return d;
+      });
+      dispatch(EditData(editedData));
       form.resetFields();
+      setEdit();
+    } else {
+      v();
     }
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
   const deleteFunction = (key) => {
-    console.log("🚀 ~ file: App.jsx:22 ~ deleteFunction ~ key", key);
-    var deletedData = data.filter((d) => d.id != key.id);
+    var deletedData = data.filter((d) => d.id !== key.id);
     dispatch(DeleteData(deletedData));
   };
 
   const handleEdit = (values) => {
     form.setFieldsValue(values);
-    console.log(values);
   };
 
   const columns = [
@@ -110,6 +112,7 @@ const App = () => {
           onFinishFailed={onFinishFailed}
           autoComplete="off"
         >
+          <Form.Item label="ID" name="id"></Form.Item>
           <Form.Item
             label="Firstname"
             name="firstname"
